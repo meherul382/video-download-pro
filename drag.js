@@ -1,23 +1,45 @@
-const dragPreview=document.getElementById('preview');
-const dragX=document.getElementById('xRange');
-const dragY=document.getElementById('yRange');
-let draggingIcon=false;
-function dragIconStart(e){
-  const icon=e.target.closest('.overlay-icon');
-  if(!icon)return;
-  draggingIcon=true;icon.setPointerCapture?.(e.pointerId);e.preventDefault();
+const preview = document.getElementById('preview');
+const xRange = document.getElementById('xRange');
+const yRange = document.getElementById('yRange');
+let dragging = false;
+let activePointer = null;
+
+function getIcon(e){
+  return e.target && e.target.closest ? e.target.closest('.overlay-icon') : null;
 }
-function dragIconMove(e){
-  if(!draggingIcon)return;
-  const r=dragPreview.getBoundingClientRect();
-  const x=Math.min(100,Math.max(0,((e.clientX-r.left)/r.width)*100));
-  const y=Math.min(100,Math.max(0,((e.clientY-r.top)/r.height)*100));
-  dragX.value=Math.round(x);dragY.value=Math.round(y);
-  dragX.dispatchEvent(new Event('input',{bubbles:true}));
-  dragY.dispatchEvent(new Event('input',{bubbles:true}));
+function setPosition(clientX, clientY){
+  const icon = preview.querySelector('.overlay-icon');
+  if(!icon) return;
+  const r = preview.getBoundingClientRect();
+  if(!r.width || !r.height) return;
+  const x = Math.max(0, Math.min(100, ((clientX-r.left)/r.width)*100));
+  const y = Math.max(0, Math.min(100, ((clientY-r.top)/r.height)*100));
+  xRange.value = Math.round(x);
+  yRange.value = Math.round(y);
+  xRange.dispatchEvent(new Event('input',{bubbles:true}));
+  yRange.dispatchEvent(new Event('input',{bubbles:true}));
 }
-function dragIconEnd(){draggingIcon=false}
-dragPreview.addEventListener('pointerdown',dragIconStart);
-dragPreview.addEventListener('pointermove',dragIconMove);
-dragPreview.addEventListener('pointerup',dragIconEnd);
-dragPreview.addEventListener('pointercancel',dragIconEnd);
+
+preview.addEventListener('pointerdown', e=>{
+  const icon=getIcon(e);
+  if(!icon) return;
+  dragging=true;
+  activePointer=e.pointerId;
+  try{icon.setPointerCapture(e.pointerId)}catch(_){ }
+  e.preventDefault();
+  setPosition(e.clientX,e.clientY);
+});
+preview.addEventListener('pointermove', e=>{
+  if(!dragging || e.pointerId!==activePointer) return;
+  e.preventDefault();
+  setPosition(e.clientX,e.clientY);
+});
+function endDrag(e){
+  if(!dragging) return;
+  if(e && activePointer!==null && e.pointerId!==activePointer) return;
+  dragging=false;
+  activePointer=null;
+}
+preview.addEventListener('pointerup',endDrag);
+preview.addEventListener('pointercancel',endDrag);
+preview.addEventListener('lostpointercapture',endDrag);
