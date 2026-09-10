@@ -3,25 +3,137 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Media Icon Studio — Play Button & Time Bar Editor</title>
-<meta name="description" content="Add a customizable play button and video-style time bar to images and video frames.">
+<title>Video Thumbnail Editor — Play Button & Time Bar</title>
+<meta name="description" content="Create compact video-style thumbnails with a customizable play button and time bar.">
 <meta name="robots" content="index, follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<style>
-.editor-controls{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}.control-box{background:#0b1422;border:1px solid #24354d;border-radius:14px;padding:14px}.control-box h3{font-size:12px;margin:0 0 12px;color:#dce8f8}.control-row{display:grid;grid-template-columns:82px 1fr 52px;gap:9px;align-items:center;margin:10px 0}.control-row label{font-size:11px;color:#8497b1}.control-row input[type=range]{width:100%;accent-color:#8db5ff}.value-pill{font-size:11px;text-align:center;padding:5px 4px;border-radius:7px;background:#162238;color:#bcd1ee}.time-options{display:grid;grid-template-columns:1fr 1fr;gap:9px}.time-options label{font-size:10px;color:#7f93ad;display:block;margin-bottom:4px}.time-options input{width:100%;height:36px;border:1px solid #2b3d56;background:#09111d;color:#fff;border-radius:8px;padding:0 9px}.toggle-row{display:flex;align-items:center;justify-content:space-between;margin-top:12px;font-size:11px;color:#9aabc1}.switch{width:42px;height:23px;border-radius:99px;background:#27384f;position:relative;cursor:pointer}.switch input{display:none}.switch:after{content:'';position:absolute;width:17px;height:17px;top:3px;left:3px;border-radius:50%;background:#9aabc1;transition:.2s}.switch:has(input:checked){background:#6f9fe8}.switch:has(input:checked):after{left:22px;background:#fff}.export-note{margin-top:10px;text-align:center;color:#7186a2;font-size:10px}.timebar-overlay{position:absolute;left:0;right:0;bottom:0;height:54px;background:linear-gradient(transparent,rgba(0,0,0,.88));display:flex;align-items:flex-end;gap:9px;padding:0 12px 9px;color:#fff;z-index:4;font-size:10px;pointer-events:none}.timebar-overlay .tiny-play{font-size:15px}.timebar-overlay .time-text{white-space:nowrap}.timebar-overlay .track{height:4px;background:#aaa;border-radius:10px;flex:1;position:relative}.timebar-overlay .track:before{content:'';position:absolute;left:0;top:0;height:100%;width:var(--pct,13%);background:#fff;border-radius:10px}.timebar-overlay .track:after{content:'';position:absolute;left:var(--pct,13%);top:50%;width:10px;height:10px;background:#fff;border-radius:50%;transform:translate(-50%,-50%)}.timebar-overlay .tool{font-size:12px;opacity:.9}.position-help{margin-top:7px;color:#647993;font-size:10px}.icon-card{position:relative}.icon-number{position:absolute;top:12px;right:13px;color:#4f6580;font-size:10px;font-weight:800;letter-spacing:.08em}.icon-card.active .icon-number{color:#8db5ff}.overlay-icon{cursor:grab;touch-action:none}.overlay-icon:active{cursor:grabbing}@media(max-width:700px){.editor-controls{grid-template-columns:1fr}.control-row{grid-template-columns:70px 1fr 50px}.time-options{grid-template-columns:1fr 1fr}}
-</style>
 </head>
 <body>
-<header class="topbar"><a class="brand" href="index.html"><span class="brand-mark">✦</span><span>Media <b>Icon Studio</b></span></a><nav><a class="active" href="#home">Home</a><a href="#video">Video Icons</a><a href="#editor">Editor</a><a href="#how">How it works</a></nav><button class="theme-btn" id="themeBtn" aria-label="Toggle theme">☼</button></header>
-<main id="home"><section class="hero"><div class="eyebrow"><span class="pulse"></span> PLAY BUTTON • TIME BAR • IMAGE EXPORT</div><h1>Make your thumbnail look like a <em>real video.</em></h1><p class="hero-copy">Upload an image or video, move the play button anywhere, resize it, and add a realistic video time bar before saving your image.</p>
-<div class="studio-card" id="editor"><div class="upload-zone" id="dropZone"><input id="fileInput" type="file" accept="image/*,video/*" hidden><div class="upload-icon">↥</div><h2>Upload an image or video</h2><p>Drag & drop your file here, or choose one from your device.</p><button class="primary-btn" id="chooseBtn">Choose file <span>→</span></button><small id="fileName">No file selected</small></div>
-<div class="preview-wrap"><div class="preview-head"><span>LIVE PREVIEW</span><span id="mediaType">Waiting for media</span></div><div class="preview" id="preview"><div class="empty-preview"><div>◉</div><span>Your media preview appears here</span></div></div><div class="preview-actions"><button id="downloadBtn" class="secondary-btn" disabled>Save Image ↧</button><button id="resetBtn" class="ghost-btn">Reset</button></div></div>
-<div class="editor-controls"><div class="control-box"><h3>PLAY BUTTON — SIZE & POSITION</h3><div class="control-row"><label>Size</label><input id="sizeRange" type="range" min="20" max="240" value="88"><span class="value-pill" id="sizeValue">88px</span></div><div class="control-row"><label>Left / Right</label><input id="xRange" type="range" min="0" max="100" value="50"><span class="value-pill" id="xValue">50%</span></div><div class="control-row"><label>Up / Down</label><input id="yRange" type="range" min="0" max="100" value="50"><span class="value-pill" id="yValue">50%</span></div><div class="position-help">You can also drag the play button directly on the image.</div></div>
-<div class="control-box"><h3>VIDEO TIME BAR</h3><div class="time-options"><div><label>Current time</label><input id="currentTimeInput" value="0:02" maxlength="8"></div><div><label>Total duration</label><input id="durationInput" value="2:49" maxlength="8"></div></div><div class="toggle-row"><span>Show time bar in saved image</span><label class="switch"><input id="timeBarToggle" type="checkbox" checked><span></span></label></div><div class="toggle-row"><span>Show play icon in time bar</span><label class="switch"><input id="miniPlayToggle" type="checkbox" checked><span></span></label></div><div class="export-note">For videos, the current video time is used automatically.</div></div></div></div></section>
-<section id="video" class="icons-section"><div class="section-heading"><span>VIDEO ICONS</span><h2>Pick your play button.</h2><p>Each style can be resized and moved anywhere on the preview.</p></div><div class="icon-grid" id="iconGrid">
-<button class="icon-card active" data-style="classic"><span class="icon-number">01</span><span class="icon-preview classic">▶</span><strong>Classic</strong><small>Clean circle</small></button><button class="icon-card" data-style="outline"><span class="icon-number">02</span><span class="icon-preview outline">▶</span><strong>Outline</strong><small>Thin border</small></button><button class="icon-card" data-style="glass"><span class="icon-number">03</span><span class="icon-preview glass">▶</span><strong>Glass</strong><small>Frosted look</small></button><button class="icon-card" data-style="square"><span class="icon-number">04</span><span class="icon-preview square">▶</span><strong>Square</strong><small>Modern block</small></button><button class="icon-card" data-style="soft"><span class="icon-number">05</span><span class="icon-preview soft">▶</span><strong>Soft</strong><small>Rounded glow</small></button><button class="icon-card" data-style="neon"><span class="icon-number">06</span><span class="icon-preview neon">▶</span><strong>Neon</strong><small>Bright edge</small></button><button class="icon-card" data-style="double"><span class="icon-number">07</span><span class="icon-preview double">▶</span><strong>Double Ring</strong><small>Premium ring</small></button><button class="icon-card" data-style="minimal"><span class="icon-number">08</span><span class="icon-preview minimal">▶</span><strong>Minimal</strong><small>Simple mark</small></button><button class="icon-card" data-style="pill"><span class="icon-number">09</span><span class="icon-preview pill">▶</span><strong>Pill</strong><small>Wide button</small></button><button class="icon-card" data-style="diamond"><span class="icon-number">10</span><span class="icon-preview diamond">▶</span><strong>Diamond</strong><small>Sharp shape</small></button><button class="icon-card" data-style="badge"><span class="icon-number">11</span><span class="icon-preview badge">▶</span><strong>Badge</strong><small>Compact badge</small></button><button class="icon-card" data-style="floating"><span class="icon-number">12</span><span class="icon-preview floating">▶</span><strong>Floating</strong><small>Soft shadow</small></button></div></section>
-<section id="how" class="how-section"><div class="section-heading"><span>HOW IT WORKS</span><h2>Three simple steps.</h2></div><div class="steps"><article><div class="step-no">01</div><div class="step-icon">↥</div><h3>Choose media</h3><p>Upload an image or video from your device.</p></article><article><div class="step-no">02</div><div class="step-icon">✦</div><h3>Customize</h3><p>Choose an icon, change its size, and move it left, right, up, or down.</p></article><article><div class="step-no">03</div><div class="step-icon">↧</div><h3>Save image</h3><p>Export the image with the play button and video-style time bar included.</p></article></div></section></main>
-<footer><div class="footer-inner"><a class="brand" href="#home"><span class="brand-mark">✦</span><span>Media <b>Icon Studio</b></span></a><p>Fast browser-based image styling.</p><div><a href="#video">Video Icons</a><a href="#editor">Editor</a><a href="#how">How it works</a></div></div></footer><script src="script.js"></script><script src="drag.js"></script></body></html>
+<header class="topbar">
+  <a class="brand" href="#home"><span class="brand-mark">▶</span><span>Video <b>Thumbnail Editor</b></span></a>
+  <nav><a class="active" href="#home">Home</a><a href="#video">Video Icons</a><a href="#editor">Editor</a></nav>
+  <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">☼</button>
+</header>
+
+<main id="home">
+<section class="hero">
+  <div class="eyebrow"><span class="pulse"></span> PLAY BUTTON • TIME BAR • IMAGE EXPORT</div>
+  <h1>Make your thumbnail look like a <em>real video.</em></h1>
+  <p class="hero-copy">Upload an image or video, customize the play button, and save a realistic video thumbnail in seconds.</p>
+
+  <div class="studio-card" id="editor">
+    <div class="studio-grid">
+      <div class="media-panel">
+        <div class="preview-head"><span>LIVE PREVIEW</span><span id="mediaType">Waiting for media</span></div>
+        <div class="preview" id="preview"><div class="empty-preview"><div>◉</div><span>Your media preview appears here</span></div></div>
+        <div class="preview-actions">
+          <button id="downloadBtn" class="secondary-btn" disabled>Download Image ↓</button>
+          <button id="resetBtn" class="ghost-btn">Reset All</button>
+        </div>
+      </div>
+
+      <div class="control-panel">
+        <div class="upload-zone" id="dropZone">
+          <input id="fileInput" type="file" accept="image/*,video/*" hidden>
+          <div class="upload-icon">▣</div>
+          <div><h2>Upload Image</h2><p>JPG, PNG, WEBP or Video</p></div>
+          <button class="primary-btn" id="chooseBtn">Choose file <span>→</span></button>
+          <small id="fileName">No file selected</small>
+        </div>
+
+        <div class="editor-controls">
+          <div class="control-box color-control" id="colorControl">
+            <h3>PLAY BUTTON COLOR</h3>
+            <div class="color-row">
+              <button class="color-dot active" data-color="#ffffff" style="background:#fff" aria-label="White"></button>
+              <button class="color-dot" data-color="#ff3b4f" style="background:#ff3b4f" aria-label="Red"></button>
+              <button class="color-dot" data-color="#1687ff" style="background:#1687ff" aria-label="Blue"></button>
+              <button class="color-dot" data-color="#19c96b" style="background:#19c96b" aria-label="Green"></button>
+              <button class="color-dot" data-color="#ffd21c" style="background:#ffd21c" aria-label="Yellow"></button>
+              <button class="color-dot" data-color="#ff4fa3" style="background:#ff4fa3" aria-label="Pink"></button>
+              <button class="color-dot" data-color="#713cff" style="background:#713cff" aria-label="Purple"></button>
+              <input class="color-picker" id="customColor" type="color" value="#ffffff" title="Custom color">
+            </div>
+          </div>
+
+          <div class="control-box">
+            <h3>PLAY BUTTON — SIZE & POSITION</h3>
+            <div class="control-row"><label>Size</label><input id="sizeRange" type="range" min="20" max="240" value="88"><span class="value-pill" id="sizeValue">88px</span></div>
+            <div class="control-row"><label>Left / Right</label><input id="xRange" type="range" min="0" max="100" value="50"><span class="value-pill" id="xValue">50%</span></div>
+            <div class="control-row"><label>Up / Down</label><input id="yRange" type="range" min="0" max="100" value="50"><span class="value-pill" id="yValue">50%</span></div>
+            <div class="position-help">Drag the play button directly on the preview.</div>
+          </div>
+
+          <div class="control-box">
+            <h3>VIDEO TIME BAR</h3>
+            <div class="time-options">
+              <div><label>Current time</label><input id="currentTimeInput" value="0:02" maxlength="8"></div>
+              <div><label>Total duration</label><input id="durationInput" value="2:49" maxlength="8"></div>
+            </div>
+            <div class="toggle-row"><span>Show time bar in saved image</span><label class="switch"><input id="timeBarToggle" type="checkbox" checked><span></span></label></div>
+            <div class="toggle-row"><span>Show play icon in time bar</span><label class="switch"><input id="miniPlayToggle" type="checkbox" checked><span></span></label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="video" class="icons-section">
+  <div class="section-heading"><span>VIDEO ICONS</span><h2>Pick your play button.</h2><p>Click a style to apply it to the preview.</p></div>
+  <div class="icon-grid" id="iconGrid">
+    <button class="icon-card active" data-style="classic"><span class="icon-number">01</span><span class="icon-preview classic">▶</span><strong>Classic</strong><small>Clean circle</small></button>
+    <button class="icon-card" data-style="outline"><span class="icon-number">02</span><span class="icon-preview outline">▶</span><strong>Outline</strong><small>Thin border</small></button>
+    <button class="icon-card" data-style="glass"><span class="icon-number">03</span><span class="icon-preview glass">▶</span><strong>Glass</strong><small>Frosted look</small></button>
+    <button class="icon-card" data-style="square"><span class="icon-number">04</span><span class="icon-preview square">▶</span><strong>Square</strong><small>Modern block</small></button>
+    <button class="icon-card" data-style="soft"><span class="icon-number">05</span><span class="icon-preview soft">▶</span><strong>Soft</strong><small>Rounded glow</small></button>
+    <button class="icon-card" data-style="neon"><span class="icon-number">06</span><span class="icon-preview neon">▶</span><strong>Neon</strong><small>Bright edge</small></button>
+    <button class="icon-card" data-style="double"><span class="icon-number">07</span><span class="icon-preview double">▶</span><strong>Double</strong><small>Premium ring</small></button>
+    <button class="icon-card" data-style="minimal"><span class="icon-number">08</span><span class="icon-preview minimal">▶</span><strong>Minimal</strong><small>Simple mark</small></button>
+    <button class="icon-card" data-style="pill"><span class="icon-number">09</span><span class="icon-preview pill">▶</span><strong>Pill</strong><small>Wide button</small></button>
+    <button class="icon-card" data-style="diamond"><span class="icon-number">10</span><span class="icon-preview diamond">▶</span><strong>Diamond</strong><small>Sharp shape</small></button>
+    <button class="icon-card" data-style="badge"><span class="icon-number">11</span><span class="icon-preview badge">▶</span><strong>Badge</strong><small>Compact badge</small></button>
+    <button class="icon-card" data-style="floating"><span class="icon-number">12</span><span class="icon-preview floating">▶</span><strong>Floating</strong><small>Soft shadow</small></button>
+  </div>
+</section>
+
+<section class="how-section" id="how">
+  <div class="section-heading"><span>HOW IT WORKS</span><h2>Three simple steps.</h2></div>
+  <div class="steps">
+    <article><div class="step-no">01</div><div class="step-icon">↥</div><h3>Choose media</h3><p>Upload an image or video from your device.</p></article>
+    <article><div class="step-no">02</div><div class="step-icon">✦</div><h3>Customize</h3><p>Pick a style, color, size and position.</p></article>
+    <article><div class="step-no">03</div><div class="step-icon">↓</div><h3>Save image</h3><p>Export your finished thumbnail as PNG.</p></article>
+  </div>
+</section>
+</main>
+
+<footer><div class="footer-inner"><a class="brand" href="#home"><span class="brand-mark">▶</span><span>Video <b>Thumbnail Editor</b></span></a><p>100% Free&nbsp; | &nbsp;No Upload to Server&nbsp; | &nbsp;Works Offline in Your Browser</p><div><a href="#video">Video Icons</a><a href="#editor">Editor</a></div></div></footer>
+
+<script src="script.js"></script>
+<script src="drag.js"></script>
+<style>
+/* Final compact reference layout */
+:root{--blue:#1b8cff;--panel:#091321;--line:#213b5c;--muted:#8194ad}
+body{background:#050b14!important;font-size:13px}
+.topbar{max-width:1080px!important;padding:10px 18px!important;margin:auto!important;background:rgba(5,11,20,.9)!important}
+.brand{font-size:13px}.brand-mark{width:30px!important;height:30px!important;border-radius:9px!important;background:linear-gradient(135deg,#159cff,#0875ef)!important;color:#fff!important}
+.topbar nav{gap:16px!important;font-size:11px!important}.theme-btn{width:32px!important;height:32px!important}
+.hero{max-width:1180px!important;margin:24px auto 0!important;padding:0 18px!important}.eyebrow{font-size:8px!important}.hero h1{font-size:clamp(28px,3.6vw,45px)!important;margin:8px 0!important}.hero-copy{font-size:11px!important;max-width:620px!important}
+.studio-card{max-width:1160px!important;margin:18px auto 0!important;padding:10px!important;border-radius:16px!important;background:#081321!important;border:1px solid #1d3a5b!important;box-shadow:0 18px 50px #0008!important}
+.studio-grid{display:grid!important;grid-template-columns:minmax(0,1.05fr) minmax(390px,.95fr)!important;gap:10px!important;align-items:stretch!important}
+.media-panel,.control-panel{min-width:0;border:1px solid #1e3959;border-radius:13px;background:#07111e;padding:10px!important}.media-panel{display:flex;flex-direction:column}.control-panel{display:flex;flex-direction:column;gap:8px}
+.preview-head{font-size:8px!important;margin:0 2px 6px!important}.preview{min-height:0!important;height:100%!important;aspect-ratio:16/10!important;max-height:none!important;border-radius:9px!important;background:#02070d!important}.media-element{max-height:none!important}
+.preview-actions{margin-top:8px!important;gap:7px!important}.secondary-btn,.ghost-btn{height:34px!important;font-size:10px!important;padding:0 12px!important;border-radius:8px!important}.secondary-btn{background:linear-gradient(135deg,#158fff,#0d73ee)!important;border-color:#299aff!important;color:#fff!important}
+.upload-zone{display:grid!important;grid-template-columns:auto 1fr auto;align-items:center;gap:9px!important;padding:10px!important;border:1px solid #1e3b5d!important;border-radius:10px!important;background:#091522!important}.upload-icon{width:38px!important;height:38px!important;margin:0!important;border-radius:9px!important;font-size:17px!important;background:#10243a!important;color:#8ec2ff!important}.upload-zone h2{font-size:13px!important;margin:0!important}.upload-zone p{font-size:9px!important;margin:1px 0!important;color:#7087a3!important}.upload-zone small{grid-column:2/-1;font-size:8px!important;margin:0!important}.primary-btn{height:34px!important;padding:0 11px!important;font-size:9px!important;border-radius:7px!important}
+.editor-controls{display:grid!important;grid-template-columns:1fr!important;gap:7px!important;margin-top:0!important}.control-box{padding:9px!important;border-radius:10px!important;background:#091522!important;border-color:#203b5b!important}.control-box h3{font-size:9px!important;margin:0 0 7px!important;text-align:left!important;color:#dce9fa!important}.control-row{grid-template-columns:72px 1fr 44px!important;gap:6px!important;margin:7px 0!important}.control-row label{font-size:8px!important}.value-pill{font-size:9px!important;padding:4px 2px!important}.position-help{font-size:8px!important;margin-top:4px!important}.time-options{gap:6px!important}.time-options label{font-size:8px!important}.time-options input{height:29px!important;font-size:9px!important}.toggle-row{font-size:8px!important;margin-top:7px!important}.switch{width:35px!important;height:19px!important}.switch:after{width:13px!important;height:13px!important}.switch:has(input:checked):after{left:19px!important}.export-note{display:none!important}
+.color-control{grid-column:1!important}.style-mini-title{display:none!important}.color-row{gap:8px!important;justify-content:flex-start}.color-dot{width:25px!important;height:25px!important}.color-picker{width:28px!important;height:25px!important}.color-dot.active{outline:2px solid #61aaff!important;outline-offset:2px}
+.timebar-overlay{height:39px!important;padding:0 8px 5px!important;gap:5px!important;font-size:8px!important}.timebar-overlay .tiny-play{font-size:11px!important}.timebar-overlay .tool{font-size:9px!important}
+.icons-section,.how-section{max-width:1180px!important;margin-top:48px!important;padding:0 18px!important}.section-heading>span{font-size:8px!important}.section-heading h2{font-size:27px!important;margin:4px 0!important}.section-heading p{font-size:10px!important}.icon-grid{grid-template-columns:repeat(6,1fr)!important;gap:7px!important;margin-top:18px!important}.icon-card{padding:8px!important;border-radius:10px!important}.icon-number{font-size:7px!important;margin-bottom:4px!important}.icon-number::after{width:16px!important;margin-left:4px!important}.icon-preview{width:43px!important;height:43px!important;margin-bottom:5px!important;font-size:15px!important}.icon-preview.pill{width:58px!important;height:29px!important}.icon-preview.diamond{width:37px!important;height:37px!important;margin:5px 0 11px 4px!important}.icon-preview.badge{width:37px!important;height:37px!important}.icon-card strong{font-size:9px!important}.icon-card small{font-size:7px!important}.steps{gap:8px!important;margin-top:18px!important}.steps article{padding:14px!important;min-height:135px!important;border-radius:10px!important}.step-icon{font-size:18px!important;margin:14px 0 7px!important}.steps h3{font-size:11px!important}.steps p{font-size:8px!important}footer{margin-top:48px!important;padding:20px 18px!important}.footer-inner{max-width:1180px!important;font-size:8px!important;gap:10px!important}
+@media(max-width:900px){.studio-grid{grid-template-columns:1fr!important}.media-panel{min-height:0}.preview{aspect-ratio:16/9!important}.icon-grid{grid-template-columns:repeat(4,1fr)!important}}
+@media(max-width:600px){.topbar nav{display:none}.hero{margin-top:18px!important}.hero h1{font-size:28px!important}.studio-card{padding:6px!important}.media-panel,.control-panel{padding:7px!important}.upload-zone{grid-template-columns:auto 1fr!important}.upload-zone .primary-btn{grid-column:1/-1}.icon-grid{grid-template-columns:repeat(3,1fr)!important}.icons-section,.how-section{margin-top:38px!important}.steps{grid-template-columns:1fr!important}.footer-inner{flex-wrap:wrap}}
+</style>
+</body>
+</html>
