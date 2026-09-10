@@ -1,1 +1,93 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Video Download Pro — Paste. Check. Save.</title><meta name="description" content="Video Download Pro checks public YouTube, Facebook, and Instagram links and supports direct video file downloads for content you are permitted to save."><meta name="robots" content="index, follow, max-image-preview:large"><link rel="canonical" href="https://video-download-pro-swart.vercel.app/"><meta name="theme-color" content="#0b1020"><meta property="og:type" content="website"><meta property="og:title" content="Video Download Pro — Paste. Check. Save."><meta property="og:description" content="Check public video links or download direct MP4, WebM, and MOV files you are permitted to save."><meta property="og:url" content="https://video-download-pro-swart.vercel.app/"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Video Download Pro"><meta name="twitter:description" content="Paste. Check. Save. A simple workflow for permitted video content."><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Video Download Pro","url":"https://video-download-pro-swart.vercel.app/","description":"A privacy-minded tool for checking public video links and downloading direct video files the user is permitted to save.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any"}</script><link rel="stylesheet" href="styles.css"></head><body><header class="topbar"><a class="brand" href="index.html"><span class="brand-mark">▶</span><span>Video Download <b>Pro</b></span></a><nav><a class="active" href="index.html">Downloader</a><a href="#how">How it works</a><a href="about.html">About</a></nav><button class="theme-btn" id="themeBtn">☼</button></header><main><section class="hero"><div class="eyebrow"><span class="pulse"></span> FAST • SIMPLE • PRIVACY-MINDED</div><h1>Save your <em>permitted</em><br>video links in seconds.</h1><p class="hero-copy">Paste a public YouTube, Facebook, or Instagram link, or paste a direct MP4, WebM, MOV, or M4V video URL that you are allowed to save.</p><div class="downloader-card"><div class="input-wrap"><span class="link-icon">⌁</span><input id="urlInput" type="url" placeholder="Paste video URL here…" autocomplete="off"><button id="clearBtn" class="clear-btn" hidden>×</button></div><button id="checkBtn" class="primary-btn"><span>Check link</span><b>→</b></button><div class="supported"><span>Supported links</span><i>● YouTube</i><i>● Facebook</i><i>● Instagram</i><i>● MP4/WebM/MOV</i></div></div><div id="result" class="result-card" hidden><div class="result-icon" id="resultIcon">✓</div><div class="result-body"><strong id="resultTitle">Link detected</strong><p id="resultText"></p></div><a id="openBtn" class="secondary-btn" target="_blank" rel="noopener noreferrer">Open original <span>↗</span></a></div><div id="error" class="error-box" hidden></div></section><div class="trust-strip"><div><strong>3+</strong><span>platforms/formats</span></div><div><strong>0</strong><span>server video copies</span></div><div><strong>100%</strong><span>mobile responsive</span></div><div><strong>SSL</strong><span>Vercel ready</span></div></div><section id="how" class="how-section"><div class="section-heading"><span>HOW IT WORKS</span><h2>Simple by design.</h2><p>No confusing controls. Just paste, check, and continue.</p></div><div class="steps"><article><div class="step-no">01</div><div class="step-icon">⌁</div><h3>Paste a link</h3><p>Paste a supported social page URL or a direct video file URL.</p></article><article><div class="step-no">02</div><div class="step-icon">✓</div><h3>Check the URL</h3><p>We recognize supported platforms and direct video formats in your browser.</p></article><article><div class="step-no">03</div><div class="step-icon">↧</div><h3>Save when allowed</h3><p>Direct video files can be opened/downloaded. Social page links continue to the original platform.</p></article></div></section><section class="notice"><div class="notice-icon">i</div><div><strong>Use content you have permission to save.</strong><p>This site does not bypass DRM, private accounts, login restrictions, or platform controls, and it does not host copies of third-party videos.</p></div></section></main><footer><div class="footer-inner"><a class="brand" href="index.html"><span class="brand-mark">▶</span><span>Video Download <b>Pro</b></span></a><p>Built for a clean, compliant link workflow.</p><div><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="about.html">About</a></div></div></footer><script src="script.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Media Icon Studio — Image & Video Tools</title>
+<meta name="description" content="Create stylish image and video icon layouts with one beautiful, responsive web tool.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#090d18">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="brand-mark">✦</span><span>Media <b>Icon Studio</b></span></a>
+  <nav>
+    <a class="active" href="#home">Home</a>
+    <a href="#video">Video Icons</a>
+    <a href="#image">Image Icons</a>
+    <a href="#how">How it works</a>
+  </nav>
+  <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">☼</button>
+</header>
+
+<main id="home">
+  <section class="hero">
+    <div class="eyebrow"><span class="pulse"></span> CLEAN • MODERN • MOBILE READY</div>
+    <h1>Turn your media into a <em>beautiful icon.</em></h1>
+    <p class="hero-copy">Upload an image or video and choose from a collection of premium play-button styles. The preview updates instantly in your browser.</p>
+
+    <div class="studio-card">
+      <div class="upload-zone" id="dropZone">
+        <input id="fileInput" type="file" accept="image/*,video/*" hidden>
+        <div class="upload-icon">↥</div>
+        <h2>Upload an image or video</h2>
+        <p>Drag & drop your file here, or choose one from your device.</p>
+        <button class="primary-btn" id="chooseBtn">Choose file <span>→</span></button>
+        <small id="fileName">No file selected</small>
+      </div>
+
+      <div class="preview-wrap">
+        <div class="preview-head"><span>LIVE PREVIEW</span><span id="mediaType">Waiting for media</span></div>
+        <div class="preview" id="preview">
+          <div class="empty-preview"><div>◉</div><span>Your media preview appears here</span></div>
+        </div>
+        <div class="preview-actions">
+          <button id="downloadBtn" class="secondary-btn" disabled>Download preview ↧</button>
+          <button id="resetBtn" class="ghost-btn">Reset</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="video" class="icons-section">
+    <div class="section-heading"><span>VIDEO ICONS</span><h2>Pick your play button.</h2><p>More styles are built in, from minimal to bold.</p></div>
+    <div class="icon-grid" id="iconGrid">
+      <button class="icon-card active" data-style="classic"><span class="icon-preview classic">▶</span><strong>Classic</strong><small>Clean circle</small></button>
+      <button class="icon-card" data-style="outline"><span class="icon-preview outline">▶</span><strong>Outline</strong><small>Thin border</small></button>
+      <button class="icon-card" data-style="glass"><span class="icon-preview glass">▶</span><strong>Glass</strong><small>Frosted look</small></button>
+      <button class="icon-card" data-style="square"><span class="icon-preview square">▶</span><strong>Square</strong><small>Modern block</small></button>
+      <button class="icon-card" data-style="soft"><span class="icon-preview soft">▶</span><strong>Soft</strong><small>Rounded glow</small></button>
+      <button class="icon-card" data-style="neon"><span class="icon-preview neon">▶</span><strong>Neon</strong><small>Bright edge</small></button>
+      <button class="icon-card" data-style="double"><span class="icon-preview double">▶</span><strong>Double Ring</strong><small>Premium ring</small></button>
+      <button class="icon-card" data-style="minimal"><span class="icon-preview minimal">▶</span><strong>Minimal</strong><small>Simple mark</small></button>
+      <button class="icon-card" data-style="pill"><span class="icon-preview pill">▶</span><strong>Pill</strong><small>Wide button</small></button>
+      <button class="icon-card" data-style="diamond"><span class="icon-preview diamond">▶</span><strong>Diamond</strong><small>Sharp shape</small></button>
+      <button class="icon-card" data-style="badge"><span class="icon-preview badge">▶</span><strong>Badge</strong><small>Compact badge</small></button>
+      <button class="icon-card" data-style="floating"><span class="icon-preview floating">▶</span><strong>Floating</strong><small>Soft shadow</small></button>
+    </div>
+  </section>
+
+  <section id="image" class="feature-section">
+    <div class="feature-card"><div class="feature-icon">▣</div><div><h3>Image ready</h3><p>Use the same studio to add a play icon over thumbnails, posters, screenshots, and social graphics.</p></div></div>
+    <div class="feature-card"><div class="feature-icon">▶</div><div><h3>Video friendly</h3><p>Video files preview with native playback controls while the selected icon style is applied to the poster layer.</p></div></div>
+    <div class="feature-card"><div class="feature-icon">⌁</div><div><h3>Browser based</h3><p>Your selected file is previewed locally. Nothing is uploaded to a server by this page.</p></div></div>
+  </section>
+
+  <section id="how" class="how-section">
+    <div class="section-heading"><span>HOW IT WORKS</span><h2>Three simple steps.</h2></div>
+    <div class="steps">
+      <article><div class="step-no">01</div><div class="step-icon">↥</div><h3>Choose media</h3><p>Select an image or video from your device.</p></article>
+      <article><div class="step-no">02</div><div class="step-icon">✦</div><h3>Pick an icon</h3><p>Tap any play-button style to change the preview instantly.</p></article>
+      <article><div class="step-no">03</div><div class="step-icon">↧</div><h3>Download</h3><p>Export a PNG preview with your selected icon overlay.</p></article>
+    </div>
+  </section>
+</main>
+
+<footer><div class="footer-inner"><a class="brand" href="#home"><span class="brand-mark">✦</span><span>Media <b>Icon Studio</b></span></a><p>Designed for fast, simple media styling.</p><div><a href="#video">Video Icons</a><a href="#image">Image</a><a href="#how">How it works</a></div></div></footer>
+<script src="script.js"></script>
+</body>
+</html>
