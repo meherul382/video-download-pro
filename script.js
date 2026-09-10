@@ -7,26 +7,60 @@ const mediaType=document.getElementById('mediaType');
 const downloadBtn=document.getElementById('downloadBtn');
 const resetBtn=document.getElementById('resetBtn');
 const themeBtn=document.getElementById('themeBtn');
+const videoTimebar=document.getElementById('videoTimebar');
+const currentTime=document.getElementById('currentTime');
+const duration=document.getElementById('duration');
+const progressBar=document.getElementById('progressBar');
 const iconCards=[...document.querySelectorAll('.icon-card')];
 let selectedFile=null;
 let selectedStyle='classic';
 let mediaUrl=null;
+let activeVideo=null;
+
+function formatTime(seconds){
+  if(!Number.isFinite(seconds)) return '0:00';
+  const total=Math.max(0,Math.floor(seconds));
+  const h=Math.floor(total/3600), m=Math.floor((total%3600)/60), s=total%60;
+  return h>0 ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
+}
+
+function updateVideoTime(){
+  if(!activeVideo) return;
+  currentTime.textContent=formatTime(activeVideo.currentTime);
+  duration.textContent=formatTime(activeVideo.duration);
+  progressBar.value=activeVideo.duration ? (activeVideo.currentTime/activeVideo.duration)*100 : 0;
+}
 
 function renderPreview(){
+  if(mediaUrl) URL.revokeObjectURL(mediaUrl);
+  mediaUrl=null;
+  activeVideo=null;
+  videoTimebar.hidden=true;
+  currentTime.textContent='0:00';
+  duration.textContent='0:00';
+  progressBar.value=0;
   if(!selectedFile){
     preview.innerHTML='<div class="empty-preview"><div>◉</div><span>Your media preview appears here</span></div>';
     mediaType.textContent='Waiting for media';
     downloadBtn.disabled=true;
     return;
   }
-  if(mediaUrl) URL.revokeObjectURL(mediaUrl);
   mediaUrl=URL.createObjectURL(selectedFile);
   const isVideo=selectedFile.type.startsWith('video/');
   preview.innerHTML='';
   const media=document.createElement(isVideo?'video':'img');
   media.className='media-element';
   media.src=mediaUrl;
-  if(isVideo){media.controls=true;media.playsInline=true;media.preload='metadata'}
+  if(isVideo){
+    activeVideo=media;
+    media.controls=true;
+    media.playsInline=true;
+    media.preload='metadata';
+    videoTimebar.hidden=false;
+    media.addEventListener('loadedmetadata',updateVideoTime);
+    media.addEventListener('timeupdate',updateVideoTime);
+    media.addEventListener('durationchange',updateVideoTime);
+  }
   preview.appendChild(media);
   const icon=document.createElement('div');
   icon.className=`overlay-icon ${selectedStyle}`;
@@ -39,7 +73,7 @@ function renderPreview(){
 function setFile(file){
   if(!file) return;
   const valid=file.type.startsWith('image/')||file.type.startsWith('video/');
-  if(!valid){fileName.textContent='Please choose an image or video file';return}
+  if(!valid){fileName.textContent='Please choose an image or video file';return;}
   selectedFile=file;
   fileName.textContent=file.name;
   renderPreview();
@@ -51,6 +85,10 @@ dropZone.addEventListener('dragleave',()=>{dropZone.style.borderColor='#33445f'}
 dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.style.borderColor='#33445f';setFile(e.dataTransfer.files[0])});
 fileInput.addEventListener('change',()=>setFile(fileInput.files[0]));
 
+progressBar.addEventListener('input',()=>{
+  if(activeVideo && Number.isFinite(activeVideo.duration)) activeVideo.currentTime=(Number(progressBar.value)/100)*activeVideo.duration;
+});
+
 iconCards.forEach(card=>card.addEventListener('click',()=>{
   iconCards.forEach(c=>c.classList.remove('active'));
   card.classList.add('active');
@@ -61,11 +99,7 @@ iconCards.forEach(card=>card.addEventListener('click',()=>{
 
 resetBtn.addEventListener('click',()=>{
   if(mediaUrl) URL.revokeObjectURL(mediaUrl);
-  mediaUrl=null;
-  selectedFile=null;
-  fileInput.value='';
-  fileName.textContent='No file selected';
-  selectedStyle='classic';
+  mediaUrl=null;activeVideo=null;selectedFile=null;fileInput.value='';fileName.textContent='No file selected';selectedStyle='classic';
   iconCards.forEach(c=>c.classList.toggle('active',c.dataset.style==='classic'));
   renderPreview();
 });
@@ -74,50 +108,29 @@ downloadBtn.addEventListener('click',async()=>{
   if(!selectedFile) return;
   const isVideo=selectedFile.type.startsWith('video/');
   if(isVideo){
-    const a=document.createElement('a');
-    a.href=mediaUrl;
-    a.download=selectedFile.name;
-    document.body.appendChild(a);a.click();a.remove();
-    return;
+    const a=document.createElement('a');a.href=mediaUrl;a.download=selectedFile.name;document.body.appendChild(a);a.click();a.remove();return;
   }
   const img=preview.querySelector('img');
   if(!img) return;
   if(!img.complete) await new Promise(resolve=>{img.onload=resolve;img.onerror=resolve});
   const canvas=document.createElement('canvas');
-  canvas.width=img.naturalWidth||img.width;
-  canvas.height=img.naturalHeight||img.height;
-  const ctx=canvas.getContext('2d');
-  ctx.drawImage(img,0,0,canvas.width,canvas.height);
+  canvas.width=img.naturalWidth||img.width;canvas.height=img.naturalHeight||img.height;
+  const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
   const size=Math.max(64,Math.round(Math.min(canvas.width,canvas.height)*0.18));
-  const x=canvas.width/2,y=canvas.height/2;
-  ctx.save();
-  ctx.translate(x,y);
+  const x=canvas.width/2,y=canvas.height/2;ctx.save();ctx.translate(x,y);
   const darkStyles=['classic','square','soft','diamond','badge','floating','pill'];
   const needsCircle=!['pill','square','badge','diamond','minimal'].includes(selectedStyle);
   if(selectedStyle==='diamond') ctx.rotate(Math.PI/4);
-  ctx.shadowColor='rgba(0,0,0,.45)';ctx.shadowBlur=size*.22;ctx.shadowOffsetY=size*.1;
-  ctx.fillStyle='#fff';
+  ctx.shadowColor='rgba(0,0,0,.45)';ctx.shadowBlur=size*.22;ctx.shadowOffsetY=size*.1;ctx.fillStyle='#fff';
   if(selectedStyle==='pill') ctx.roundRect(-size*.75,-size*.38,size*1.5,size*.76,size*.38);
   else if(selectedStyle==='square'||selectedStyle==='badge') ctx.roundRect(-size/2,-size/2,size,size,size*.2);
   else if(selectedStyle==='diamond') ctx.roundRect(-size*.38,-size*.38,size*.76,size*.76,size*.12);
-  else if(selectedStyle!=='minimal' && needsCircle){ctx.beginPath();ctx.arc(0,0,size/2,0,Math.PI*2)}
-  if(selectedStyle!=='minimal' && (darkStyles.includes(selectedStyle)||needsCircle)) ctx.fill();
-  ctx.shadowColor='transparent';
-  ctx.fillStyle=darkStyles.includes(selectedStyle)?'#101827':'#fff';
-  ctx.font=`800 ${Math.round(size*.42)}px Arial`;
-  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('▶',0,1);
-  if(selectedStyle==='outline'||selectedStyle==='double'||selectedStyle==='neon'){
-    ctx.strokeStyle='#fff';ctx.lineWidth=Math.max(3,size*.07);ctx.beginPath();ctx.arc(0,0,size/2,0,Math.PI*2);ctx.stroke();
-    if(selectedStyle==='double'){ctx.globalAlpha=.35;ctx.beginPath();ctx.arc(0,0,size*.65,0,Math.PI*2);ctx.stroke()}
-  }
+  else if(selectedStyle!=='minimal'&&needsCircle){ctx.beginPath();ctx.arc(0,0,size/2,0,Math.PI*2)}
+  if(selectedStyle!=='minimal'&&(darkStyles.includes(selectedStyle)||needsCircle)) ctx.fill();
+  ctx.shadowColor='transparent';ctx.fillStyle=darkStyles.includes(selectedStyle)?'#101827':'#fff';ctx.font=`800 ${Math.round(size*.42)}px Arial`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('▶',0,1);
+  if(selectedStyle==='outline'||selectedStyle==='double'||selectedStyle==='neon'){ctx.strokeStyle='#fff';ctx.lineWidth=Math.max(3,size*.07);ctx.beginPath();ctx.arc(0,0,size/2,0,Math.PI*2);ctx.stroke();if(selectedStyle==='double'){ctx.globalAlpha=.35;ctx.beginPath();ctx.arc(0,0,size*.65,0,Math.PI*2);ctx.stroke()}}
   ctx.restore();
-  const link=document.createElement('a');
-  link.download=`media-icon-${Date.now()}.png`;
-  link.href=canvas.toDataURL('image/png');
-  document.body.appendChild(link);link.click();link.remove();
+  const link=document.createElement('a');link.download=`media-icon-${Date.now()}.png`;link.href=canvas.toDataURL('image/png');document.body.appendChild(link);link.click();link.remove();
 });
 
-themeBtn.addEventListener('click',()=>{
-  document.body.classList.toggle('light');
-  themeBtn.textContent=document.body.classList.contains('light')?'☾':'☼';
-});
+themeBtn.addEventListener('click',()=>{document.body.classList.toggle('light');themeBtn.textContent=document.body.classList.contains('light')?'☾':'☼'});
